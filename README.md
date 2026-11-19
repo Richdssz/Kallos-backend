@@ -33,3 +33,4 @@ A API estará disponível em: `http://localhost:8080/api/health`
 docker build -t pi3-backend .
 docker run -p 8080:8080 pi3-backend
 ```
+
