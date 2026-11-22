@@ -34,3 +34,8 @@ build/
 
 # Documento-fonte local
 /docs/backend-kallos.pdf
+
+### Env ###
+.env
+.env.*
+!.env.example
