@@ -23,13 +23,12 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     @Query("""
             SELECT p FROM Paciente p
             WHERE p.psicologoId = :psicologoId
-              AND (:status IS NULL OR p.status = :status)
+              AND (:status = '' OR p.status = :status)
               AND (
-                :termo IS NULL
+                :termo = ''
                 OR LOWER(p.nome) LIKE LOWER(CONCAT('%', :termo, '%'))
-                OR (:termoDigitos IS NOT NULL AND p.cpf LIKE CONCAT('%', :termoDigitos, '%'))
+                OR (:termoDigitos <> '' AND p.cpf LIKE CONCAT('%', :termoDigitos, '%'))
               )
-            ORDER BY p.nome ASC
             """)
     Page<Paciente> buscarComFiltros(@Param("psicologoId") Long psicologoId, @Param("status") String status,
             @Param("termo") String termo, @Param("termoDigitos") String termoDigitos, Pageable pageable);

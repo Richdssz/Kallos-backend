@@ -28,9 +28,8 @@ public class PacienteServiceImpl implements PacienteService {
     @Transactional(readOnly = true)
     public Page<PacienteResumoDTO> listar(String busca, String status, Pageable pageable) {
         Long psicologoId = obterPsicologoAutenticadoId();
-        String termo = (busca == null || busca.isBlank()) ? null : busca.trim();
-        String digitos = (termo == null) ? "" : termo.replaceAll("\\D", "");
-        String termoDigitos = digitos.isEmpty() ? null : digitos;
+        String termo = (busca == null || busca.isBlank()) ? "" : busca.trim();
+        String termoDigitos = termo.isEmpty() ? "" : termo.replaceAll("\\D", "");
 
         return pacienteRepository
                 .buscarComFiltros(psicologoId, normalizarStatus(status), termo, termoDigitos, pageable)
@@ -107,13 +106,13 @@ public class PacienteServiceImpl implements PacienteService {
 
     private String normalizarStatus(String status) {
         if (status == null || status.isBlank() || "Todos".equalsIgnoreCase(status.trim())) {
-            return null;
+            return "";
         }
         return status.trim().toUpperCase();
     }
 
     private Long obterPsicologoAutenticadoId() {
-        return 1L;
+        return 2L;
     }
 
     private void criarProntuarioEVinculoInicial(Paciente paciente) {
