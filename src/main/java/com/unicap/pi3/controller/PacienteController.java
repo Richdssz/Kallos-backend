@@ -3,7 +3,9 @@ package com.unicap.pi3.controller;
 import com.unicap.pi3.dto.PacienteRequestDTO;
 import com.unicap.pi3.dto.PacienteResponseDTO;
 import com.unicap.pi3.dto.PacienteResumoDTO;
+import com.unicap.pi3.dto.SessaoResponseDTO;
 import com.unicap.pi3.service.PacienteService;
+import com.unicap.pi3.service.SessaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/pacientes")
@@ -35,6 +38,7 @@ import java.net.URI;
 public class PacienteController {
 
     private final PacienteService pacienteService;
+    private final SessaoService sessaoService;
 
     @GetMapping
     @Operation(summary = "Listar pacientes", description = "Lista paginada de pacientes do psicólogo com busca por nome ou CPF e filtro por status.")
@@ -56,6 +60,18 @@ public class PacienteController {
     })
     public ResponseEntity<PacienteResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(pacienteService.buscarPorId(id));
+    }
+
+    @GetMapping("/{id}/sessoes")
+    @Operation(summary = "Listar sessões do paciente", description = "Retorna o histórico de sessões do paciente ordenadas da mais recente para a mais antiga.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Histórico retornado com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Psicólogo sem vínculo com o paciente"),
+            @ApiResponse(responseCode = "404", description = "Paciente não encontrado")
+    })
+    public ResponseEntity<List<SessaoResponseDTO>> listarSessoes(@PathVariable Long id) {
+        pacienteService.buscarPorId(id);
+        return ResponseEntity.ok(sessaoService.listarPorPaciente(id));
     }
 
     @PostMapping
