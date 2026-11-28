@@ -40,14 +40,28 @@ public record SessaoResponseDTO(
                 inicioLocal.toLocalDate(),
                 inicioLocal.format(HORA_FORMATTER),
                 duracao,
-                sessao.getModalidade(),
+                formatarModalidade(sessao.getModalidade()),
                 sessao.getValor(),
                 formatarStatus(sessao.getStatus()),
                 "PAGO".equalsIgnoreCase(sessao.getStatusPagamento()) ? "Pago" : "Pendente",
-                sessao.getFormaPagamento(),
+                formatarFormaPagamento(sessao.getFormaPagamento()),
                 sessao.getObservacoes(),
                 sessao.getPagoEm()
         );
+    }
+
+    private static String formatarModalidade(String modalidade) {
+        if (modalidade == null) {
+            return null;
+        }
+        return "ONLINE".equalsIgnoreCase(modalidade) ? "Online" : "Presencial";
+    }
+
+    private static String formatarFormaPagamento(String formaPagamento) {
+        if (formaPagamento == null) {
+            return null;
+        }
+        return "CARTAO".equalsIgnoreCase(formaPagamento) ? "Cartao" : "Pix";
     }
 
     private static String formatarStatus(String status) {
